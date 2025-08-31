@@ -1,0 +1,29 @@
+{
+  "name": "booklance",
+  "version": "1.0.0",
+  "description": "mern project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishalpathak28/bookLanceApp.git"
+  },
+  "author": "Vishal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishalpathak28/bookLanceApp/issues"
+  },
+  "homepage": "https://github.com/vishalpathak28/bookLanceApp#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mongoose": "^8.17.0",
+    "nodemon": "^3.1.10"
+  }
+}
