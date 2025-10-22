@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
@@ -30,6 +31,18 @@ try {
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
+
+if (process.env.NODE_ENV === "production") {
+    const dirPath = path.resolve();
+    app.use(express.static(path.join(dirPath, "Frontend/dist")));
+
+    // Use a regex to catch all paths
+    app.get(/^\/.*$/, (req, res) => {
+        res.sendFile(path.join(dirPath, "Frontend/dist/index.html"));
+    });
+}
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
