@@ -5,11 +5,11 @@ function Cards({ item }) {
   const handleBuyNow = async () => {
     try {
       // Create order on backend
-      const { data } = await axios.post("/create-order", { amount: item.price });
+      const { data } = await axios.post("/payment/create-order", { amount: item.price });
 
       // Open Razorpay checkout
       const options = {
-        key: "YOUR_RAZORPAY_KEY_ID", // same as backend .env key_id
+        key: "rzp_live_RYrdMqWiNarERs", // ✅ use your live key ID
         amount: data.amount,
         currency: "INR",
         name: "BookLance Store",
@@ -17,7 +17,7 @@ function Cards({ item }) {
         image: item.image,
         order_id: data.id,
         handler: function (response) {
-          alert("Payment Successful! ID: " + response.razorpay_payment_id);
+          alert("✅ Payment Successful! ID: " + response.razorpay_payment_id);
         },
         prefill: {
           name: "Vishal Pathak",
@@ -27,11 +27,12 @@ function Cards({ item }) {
           color: "#f472b6",
         },
       };
+
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      console.error(err);
-      alert("Payment Failed. Try again!");
+      console.error("Payment error:", err);
+      alert("❌ Payment Failed. Try again!");
     }
   };
 
