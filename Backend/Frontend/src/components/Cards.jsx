@@ -2,40 +2,38 @@ import React from "react";
 import axios from "axios";
 
 function Cards({ item }) {
-  const handleBuyNow = async () => {
-    try {
-      // Create order on backend
-      const { data } = await axios.post("https://bookcity.onrender.com/create-order", { amount: item.price });
+ const handleBuyNow = async () => {
+  try {
+    const { data } = await axios.post("/payment/create-order", { amount: item.price });
 
+    const options = {
+      key: "rzp_live_RYrdMqWiNarERs",
+      amount: data.amount,
+      currency: "INR",
+      name: "BookLance Store",
+      description: `Payment for ${item.name}`,
+      image: item.image,
+      order_id: data.id,
+      handler: function (response) {
+        alert("Payment Successful! ID: " + response.razorpay_payment_id);
+      },
+      prefill: {
+        name: "Vishal Pathak",
+        email: "example@email.com",
+      },
+      theme: {
+        color: "#f472b6",
+      },
+    };
 
-      // Open Razorpay checkout
-      const options = {
-        key: "rzp_live_RYrdMqWiNarERs", // ✅ use your live key ID
-        amount: data.amount,
-        currency: "INR",
-        name: "BookLance Store",
-        description: `Payment for ${item.name}`,
-        image: item.image,
-        order_id: data.id,
-        handler: function (response) {
-          alert("✅ Payment Successful! ID: " + response.razorpay_payment_id);
-        },
-        prefill: {
-          name: "Vishal Pathak",
-          email: "example@email.com",
-        },
-        theme: {
-          color: "#f472b6",
-        },
-      };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error(err);
+    alert("Payment Failed. Try again!");
+  }
+};
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("❌ Payment Failed. Try again!");
-    }
-  };
 
   return (
     <div className="mt-4 my-3 p-3">
