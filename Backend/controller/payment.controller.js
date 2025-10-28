@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config(); // ✅ Load environment variables first
+dotenv.config();
 
 import Razorpay from "razorpay";
 import crypto from "crypto";
@@ -20,12 +20,14 @@ export const createOrder = async (req, res) => {
     };
 
     const order = await razorpay.orders.create(options);
-    res.status(200).json({
+
+    // ✅ Important: send success flag & required fields for frontend
+    res.json({
       success: true,
-      orderId: order.id,
+      key: process.env.RAZORPAY_KEY_ID,
       amount: order.amount,
       currency: order.currency,
-      key: process.env.RAZORPAY_KEY_ID,
+      orderId: order.id,
     });
   } catch (error) {
     console.error("Error creating order:", error);
