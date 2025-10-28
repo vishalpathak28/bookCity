@@ -32,6 +32,34 @@ try {
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 
+
+
+// ✅ -------------------- ADD BELOW CODE --------------------
+import Razorpay from "razorpay";
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+app.post("/create-order", async (req, res) => {
+    try {
+        const options = {
+            amount: 50000, // amount in paise (50000 = ₹500)
+            currency: "INR",
+            receipt: "order_rcptid_11",
+        };
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to create order" });
+    }
+});
+// ✅ -------------------- END ADDED CODE --------------------
+
+
+
 if (process.env.NODE_ENV === "production") {
     const dirPath = path.resolve();
     app.use(express.static(path.join(dirPath, "Frontend/dist")));
@@ -41,8 +69,6 @@ if (process.env.NODE_ENV === "production") {
         res.sendFile(path.join(dirPath, "Frontend/dist/index.html"));
     });
 }
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
