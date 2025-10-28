@@ -5,7 +5,8 @@ function Cards({ item }) {
   const handleBuyNow = async () => {
     try {
       // Create order on backend
-      const { data } = await axios.post("/payment/create-order", { amount: item.price });
+      const { data } = await axios.post("https://bookcity.onrender.com/create-order", { amount: item.price });
+
 
       // Open Razorpay checkout
       const options = {
