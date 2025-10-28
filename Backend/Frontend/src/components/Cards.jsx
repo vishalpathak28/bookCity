@@ -2,46 +2,48 @@ import React from "react";
 import axios from "axios";
 
 function Cards({ item }) {
- const handlePayment = async () => {
-  const amount = 500; // ₹500 example
+  const handleBuyNow = async () => {
+    try {
+      // Create order from backend
+      const res = await fetch("/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: item.price }), // dynamic price
+      });
 
-  const res = await fetch("http://localhost:4000/payment/create-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount }),
-  });
+      const data = await res.json();
 
-  const data = await res.json();
+      if (!data.success) {
+        alert("Order creation failed");
+        return;
+      }
 
-  if (!data.success) {
-    alert("Order creation failed");
-    return;
-  }
+      // Razorpay options
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: "BookCity Store",
+        description: `Payment for ${item.name}`,
+        order_id: data.orderId,
+        handler: async (response) => {
+          alert("Payment Successful!");
+          console.log(response);
+        },
+        prefill: {
+          name: "Vishal Pathak",
+          email: "example@email.com",
+        },
+        theme: { color: "#f472b6" },
+      };
 
-  const options = {
-    key: data.key,
-    amount: data.amount,
-    currency: data.currency,
-    name: "CareerPulse",
-    description: "Book Purchase",
-    order_id: data.orderId,
-    handler: async (response) => {
-      alert("Payment Successful!");
-      console.log(response);
-    },
-    theme: { color: "#3399cc" },
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      alert("Payment Failed. Try again!");
+    }
   };
-
-  const rzp = new window.Razorpay(options);
-  rzp.open();
-};
-
-  } catch (err) {
-    console.error(err);
-    alert("Payment Failed. Try again!");
-  }
-};
-
 
   return (
     <div className="mt-4 my-3 p-3">
