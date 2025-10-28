@@ -32,8 +32,14 @@ try {
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
-app.use("/payment", paymentRoute); // ✅ NEW ROUTE ADDED
+app.use("/payment", paymentRoute); // ⚙️ keep this same
 
+// ✅ Add this middleware to ensure .env is loaded before paymentRoute
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  console.error("❌ Razorpay keys missing! Check your .env file.");
+}
+
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   const dirPath = path.resolve();
   app.use(express.static(path.join(dirPath, "Frontend/dist")));
