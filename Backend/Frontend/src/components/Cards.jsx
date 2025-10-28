@@ -2,32 +2,40 @@ import React from "react";
 import axios from "axios";
 
 function Cards({ item }) {
- const handleBuyNow = async () => {
-  try {
-    const { data } = await axios.post("/payment/create-order", { amount: item.price });
+ const handlePayment = async () => {
+  const amount = 500; // ₹500 example
 
-    const options = {
-      key: "rzp_live_RYrdMqWiNarERs",
-      amount: data.amount,
-      currency: "INR",
-      name: "BookLance Store",
-      description: `Payment for ${item.name}`,
-      image: item.image,
-      order_id: data.id,
-      handler: function (response) {
-        alert("Payment Successful! ID: " + response.razorpay_payment_id);
-      },
-      prefill: {
-        name: "Vishal Pathak",
-        email: "example@email.com",
-      },
-      theme: {
-        color: "#f472b6",
-      },
-    };
+  const res = await fetch("http://localhost:4000/payment/create-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount }),
+  });
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+  const data = await res.json();
+
+  if (!data.success) {
+    alert("Order creation failed");
+    return;
+  }
+
+  const options = {
+    key: data.key,
+    amount: data.amount,
+    currency: data.currency,
+    name: "CareerPulse",
+    description: "Book Purchase",
+    order_id: data.orderId,
+    handler: async (response) => {
+      alert("Payment Successful!");
+      console.log(response);
+    },
+    theme: { color: "#3399cc" },
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
+
   } catch (err) {
     console.error(err);
     alert("Payment Failed. Try again!");
