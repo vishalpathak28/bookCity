@@ -6,6 +6,7 @@ import path from "path";
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
+import paymentRoute from "./route/payment.route.js"; // ✅ NEW IMPORT
 
 const app = express();
 
@@ -19,57 +20,30 @@ const URI = process.env.MongoDBURI;
 
 // connect to mongoDB
 try {
-    mongoose.connect(URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-    console.log("Connected to mongoDB");
+  mongoose.connect(URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log("Connected to mongoDB");
 } catch (error) {
-    console.log("Error: ", error);
+  console.log("Error: ", error);
 }
 
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
-
-
-
-// ✅ -------------------- ADD BELOW CODE --------------------
-import Razorpay from "razorpay";
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
-
-app.post("/create-order", async (req, res) => {
-    try {
-        const options = {
-            amount: 50000, // amount in paise (50000 = ₹500)
-            currency: "INR",
-            receipt: "order_rcptid_11",
-        };
-        const order = await razorpay.orders.create(options);
-        res.json(order);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Failed to create order" });
-    }
-});
-// ✅ -------------------- END ADDED CODE --------------------
-
-
+app.use("/payment", paymentRoute); // ✅ NEW ROUTE ADDED
 
 if (process.env.NODE_ENV === "production") {
-    const dirPath = path.resolve();
-    app.use(express.static(path.join(dirPath, "Frontend/dist")));
+  const dirPath = path.resolve();
+  app.use(express.static(path.join(dirPath, "Frontend/dist")));
 
-    // Use a regex to catch all paths
-    app.get(/^\/.*$/, (req, res) => {
-        res.sendFile(path.join(dirPath, "Frontend/dist/index.html"));
-    });
+  // Use a regex to catch all paths
+  app.get(/^\/.*$/, (req, res) => {
+    res.sendFile(path.join(dirPath, "Frontend/dist/index.html"));
+  });
 }
 
 app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
