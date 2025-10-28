@@ -1,16 +1,20 @@
+import dotenv from "dotenv";
+dotenv.config(); // ✅ Load environment variables first
+
 import Razorpay from "razorpay";
 import crypto from "crypto";
 
+// ✅ Initialize Razorpay AFTER dotenv.config()
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Create Razorpay order
+// ✅ Create Razorpay order
 export const createOrder = async (req, res) => {
   try {
     const options = {
-      amount: req.body.amount * 100, // amount in paise (₹1 = 100p)
+      amount: req.body.amount * 100, // Convert rupees to paise
       currency: "INR",
       receipt: `receipt_order_${Math.floor(Math.random() * 1000000)}`,
     };
@@ -23,11 +27,12 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Verify Razorpay payment signature
+// ✅ Verify Razorpay payment signature
 export const verifyPayment = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
+
     const expectedSign = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(sign.toString())
