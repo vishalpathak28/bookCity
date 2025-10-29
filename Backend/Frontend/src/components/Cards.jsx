@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function Cards({ item }) {
   const [showMessage, setShowMessage] = useState(false);
 
   const handleBuyNow = async () => {
     try {
-      // Create order from backend
       const res = await fetch("/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,7 +18,6 @@ function Cards({ item }) {
         return;
       }
 
-      // Razorpay options
       const options = {
         key: data.key,
         amount: data.amount,
@@ -29,8 +26,8 @@ function Cards({ item }) {
         description: `Payment for ${item.name}`,
         order_id: data.orderId,
         handler: async (response) => {
-          // Close Razorpay window and show the custom message
-          setShowMessage(true);
+          console.log(response);
+          setShowMessage(true); // ✅ show overlay after payment success
         },
         prefill: {
           name: "Vishal Pathak",
@@ -49,28 +46,7 @@ function Cards({ item }) {
 
   return (
     <>
-      {/* Payment Success Modal */}
-      {showMessage && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl text-center max-w-md mx-auto">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">
-              Payment Successful!
-            </h2>
-            <p className="text-gray-800 dark:text-gray-200 mb-6">
-              Next Step: Please send your payment screenshot and your address on
-              WhatsApp no - <b>8630198478</b>
-            </p>
-            <button
-              onClick={() => setShowMessage(false)}
-              className="bg-pink-500 text-white px-5 py-2 rounded-full hover:bg-pink-600 transition duration-200"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Card Layout */}
+      {/* Product Card */}
       <div className="mt-4 my-3 p-3">
         <div className="card w-full bg-base-100 shadow-xl hover:scale-105 duration-200 dark:bg-slate-900 dark:text-white dark:border">
           <figure>
@@ -94,6 +70,31 @@ function Cards({ item }) {
           </div>
         </div>
       </div>
+
+      {/* ✅ Centered Full-Screen Message Box with Blur */}
+      {showMessage && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-slate-900 text-black dark:text-white p-8 rounded-2xl shadow-2xl text-center w-[90%] md:w-[500px] border border-pink-400">
+            <h2 className="text-2xl font-bold mb-4 text-pink-600">
+              ✅ Payment Successful!
+            </h2>
+            <p className="text-lg mb-3 font-medium">Next Step:</p>
+            <p className="text-lg mb-4">
+              Please send your <b>payment screenshot</b> and <b>address</b> on
+              WhatsApp number:
+            </p>
+            <p className="text-2xl font-semibold text-green-600">
+              8630198478
+            </p>
+            <button
+              onClick={() => setShowMessage(false)}
+              className="mt-6 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
