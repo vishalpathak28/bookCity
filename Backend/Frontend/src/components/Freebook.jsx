@@ -86,7 +86,7 @@ function Freebook() {
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
-                alt="WhatsApp" />
+                alt="WhatsApp"
                 className="w-6 h-6"
               />
               Chat on WhatsApp
