@@ -53,14 +53,14 @@ function Freebook() {
               <Cards
                 item={item}
                 key={item.id}
-                onPaymentSuccess={() => setShowMessage(true)} // ✅ control popup
+                onPaymentSuccess={() => setShowMessage(true)} // ✅ trigger popup
               />
             ))}
           </Slider>
         </div>
       </div>
 
-      {/* ✅ Fullscreen Modal OUTSIDE Slider */}
+      {/* ✅ Fullscreen Success Popup */}
       {showMessage && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white dark:bg-slate-900 text-black dark:text-white p-8 rounded-2xl shadow-2xl text-center w-[90%] md:w-[500px] border border-pink-400">
@@ -72,12 +72,29 @@ function Freebook() {
               Please send your <b>payment screenshot</b> and <b>address</b> on
               WhatsApp number:
             </p>
-            <p className="text-2xl font-semibold text-green-600">
+
+            <p className="text-2xl font-semibold text-green-600 mb-6">
               8630198478
             </p>
+
+            {/* ✅ WhatsApp Button */}
+            <a
+              href="https://wa.me/918630198478?text=Hello%20I%20have%20completed%20my%20payment%20and%20want%20to%20share%20details."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold text-lg duration-200"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                alt="WhatsApp"
+                className="w-6 h-6"
+              />
+              Chat on WhatsApp
+            </a>
+
             <button
               onClick={() => setShowMessage(false)}
-              className="mt-6 px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 duration-200"
+              className="mt-6 block w-full px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 duration-200"
             >
               Close
             </button>
