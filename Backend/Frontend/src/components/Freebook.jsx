@@ -85,8 +85,8 @@ function Freebook() {
               className="inline-flex items-center gap-2 px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold text-lg duration-200"
             >
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                alt="WhatsApp"
+                src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
+                alt="WhatsApp" />
                 className="w-6 h-6"
               />
               Chat on WhatsApp
