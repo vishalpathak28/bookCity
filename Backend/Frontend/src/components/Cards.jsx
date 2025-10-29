@@ -26,10 +26,15 @@ function Cards({ item }) {
         name: "BookCity Store",
         description: `Payment for ${item.name}`,
         order_id: data.orderId,
+
         handler: async (response) => {
-          alert("Payment Successful!");
-          console.log(response);
+          // ✅ Close Razorpay popup
+          alert(
+            "Next Step: Please send your payment screenshot and your address on WhatsApp no - 8630198478"
+          );
+          console.log("Payment successful:", response);
         },
+
         prefill: {
           name: "Vishal Pathak",
           email: "example@email.com",
@@ -38,6 +43,13 @@ function Cards({ item }) {
       };
 
       const rzp = new window.Razorpay(options);
+
+      // ✅ When user completes or cancels payment, popup will close automatically
+      rzp.on("payment.failed", function (response) {
+        alert("Payment Failed. Please try again!");
+        console.error(response.error);
+      });
+
       rzp.open();
     } catch (err) {
       console.error(err);
