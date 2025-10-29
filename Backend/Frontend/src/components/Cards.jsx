@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function Cards({ item }) {
   const [showMessage, setShowMessage] = useState(false);
@@ -31,7 +30,8 @@ function Cards({ item }) {
 
         handler: async (response) => {
           console.log("Payment successful:", response);
-          setShowMessage(true); // ✅ Show success box
+          // ✅ Show success modal (independent of cards)
+          setShowMessage(true);
         },
 
         prefill: {
@@ -55,21 +55,23 @@ function Cards({ item }) {
 
   return (
     <>
-      {/* ✅ Full-screen success message box */}
+      {/* ✅ Full-screen independent popup */}
       {showMessage && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-          <div className="bg-white text-center p-8 rounded-2xl shadow-2xl max-w-md mx-4">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
+          <div className="bg-white text-center p-10 rounded-2xl shadow-2xl w-[90%] max-w-lg">
+            <h2 className="text-3xl font-bold text-green-600 mb-4">
               Payment Successful 🎉
             </h2>
-            <p className="text-gray-800 text-lg mb-6">
+            <p className="text-gray-800 text-lg mb-6 leading-relaxed">
               Next Step: Please send your <b>payment screenshot</b> and your{" "}
               <b>address</b> on WhatsApp no -{" "}
-              <span className="font-semibold text-pink-600">8630198478</span>
+              <span className="font-semibold text-pink-600">
+                8630198478
+              </span>
             </p>
             <button
               onClick={() => setShowMessage(false)}
-              className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition"
+              className="bg-pink-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-pink-600 transition"
             >
               OK
             </button>
@@ -77,7 +79,7 @@ function Cards({ item }) {
         </div>
       )}
 
-      {/* ✅ Product Card */}
+      {/* ✅ Individual Card */}
       <div className="mt-4 my-3 p-3">
         <div className="card w-full bg-base-100 shadow-xl hover:scale-105 duration-200 dark:bg-slate-900 dark:text-white dark:border">
           <figure>
